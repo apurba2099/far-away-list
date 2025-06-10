@@ -96,6 +96,8 @@ input {
   list-style: none;
   width: 80%;
   overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: hidden;
 
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -131,4 +133,3 @@ input[type="checkbox"] {
   font-weight: 700;
   padding: 3.2rem 0;
 }
-
