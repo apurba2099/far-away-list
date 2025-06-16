@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Component, useState } from "react";
 
 // Trial Items
 // const initialItems = [
@@ -7,8 +7,9 @@ import { useState } from "react";
 //   { id: 3, description: "Charger", quantity: 1, packed: false },
 // ];
 
+// Main APP Component
 export default function App() {
-  const [items, setItems] = useState();
+  const [items, setItems] = useState([]);
 
   //Add new item handle functions
   function handleAddItems(item) {
@@ -20,16 +21,29 @@ export default function App() {
     setItems((items) => items.filter((item) => item.id !== id));
   }
 
+  // Handle the check box
+  function handleToggleItem(id) {
+    setItems((items) =>
+      items.map((item) =>
+        item.id === id ? { ...item, packed: !item.packed } : item
+      )
+    );
+  }
   return (
     <div className="app">
       <Logo />
       <From onAddItems={handleAddItems} />
-      <PackingList items={items} onDeleteItem={handleDeleteItem} />
+      <PackingList
+        items={items}
+        onDeleteItem={handleDeleteItem}
+        onToggleItem={handleToggleItem}
+      />
       <Stats />
     </div>
   );
 }
 
+// Logo Component
 function Logo() {
   return (
     <>
@@ -38,6 +52,7 @@ function Logo() {
   );
 }
 
+//From Components
 function From({ onAddItems }) {
   //For input fields
   const [description, setDescription] = useState("");
@@ -95,21 +110,33 @@ function From({ onAddItems }) {
   );
 }
 
-function PackingList({ items, onDeleteItem }) {
+//Packing list Component
+function PackingList({ items, onDeleteItem, onToggleItem }) {
   return (
     <div className="list">
       <ul>
         {items.map((item) => (
-          <Item item={item} onDeleteItem={onDeleteItem} key={item.id} />
+          <Item
+            item={item}
+            onDeleteItem={onDeleteItem}
+            key={item.id}
+            onToggleItem={onToggleItem}
+          />
         ))}
       </ul>
     </div>
   );
 }
 
-function Item({ item, onDeleteItem }) {
+// Item Component
+function Item({ item, onDeleteItem, onToggleItem }) {
   return (
     <li>
+      <input
+        type="checkbox"
+        value={item.packed}
+        onChange={() => onToggleItem(item.id)}
+      />
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
         {item.quantity} {item.description}
       </span>
@@ -118,6 +145,7 @@ function Item({ item, onDeleteItem }) {
   );
 }
 
+// Stats/Footer Component
 function Stats() {
   return (
     <footer className="stats">
